@@ -30,12 +30,12 @@ Building a Docker container and running with Docker.
 
 1.  Build using pack.
     ```bash
-    pack build kotlin-ktor-starter --builder heroku/buildpacks:20
+    pack build ip-org-resolver --builder heroku/buildpacks:20
     ```
 
 1.  Run with docker.
     ```bash
-    docker run  -e "PORT=8882" -e "APP=applications/basic-server/build/libs/basic-server-1.0-SNAPSHOT.jar" kotlin-ktor-starter
+    docker run  -e "PORT=8882" -e "APP=applications/basic-server/build/libs/basic-server-1.0-SNAPSHOT.jar" ip-org-resolver
     ```
 
 ## Development
