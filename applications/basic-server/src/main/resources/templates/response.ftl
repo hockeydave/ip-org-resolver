@@ -1,3 +1,5 @@
+<#-- @ftlvariable name="errorMessage" type="java.lang.String" -->
+<#-- @ftlvariable name="ip" type="String" -->
 <#import "template.ftl" as layout />
 
 <@layout.noauthentication>
