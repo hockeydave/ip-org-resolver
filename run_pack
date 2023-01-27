@@ -1,0 +1,2 @@
+#!/bin/bash
+pack build ip-org-resolver --builder heroku/buildpacks:21

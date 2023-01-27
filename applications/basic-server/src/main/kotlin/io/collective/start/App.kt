@@ -13,6 +13,10 @@ import io.ktor.server.netty.*
 import io.ktor.util.pipeline.*
 import java.util.*
 
+/**
+ * @author dpeterson
+ * Main web interface entry point for HTTP get and post.
+ */
 fun Application.module() {
     install(DefaultHeaders)
     install(CallLogging)
@@ -20,13 +24,41 @@ fun Application.module() {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
     install(Routing) {
-        get("/") {
-            call.respond(FreeMarkerContent("index.ftl", mapOf("headers" to headers())))
-        }
         post("/ip-resolve") {
             val formParameters = call.receiveParameters()
             val ipAddress = formParameters["ip"].toString()
-            call.respond(FreeMarkerContent("response.ftl", mapOf("ip" to ipAddress)))
+            val ipType = IPUtility.validIPAddress(ipAddress)
+            if (ipType.equals(IPUtility.IPType.IPv4) || ipType.equals(IPUtility.IPType.IPv6)) {
+                call.respond(
+                    FreeMarkerContent(
+                        "response.ftl", mapOf(
+                            "ip" to ipAddress,
+                            "errorMessage" to "Valid:  This is a valid IP Address"
+                        )
+                    )
+                )
+            } else if (ipType.equals(IPUtility.IPType.IPv4Private)) {
+                call.respond(
+                    FreeMarkerContent(
+                        "response.ftl", mapOf(
+                            "ip" to ipAddress,
+                            "errorMessage" to "Invalid:  Private IP Address entered which can't be part of a public Org"
+                        )
+                    )
+                )
+            } else {    // IPType.Neither
+                call.respond(
+                    FreeMarkerContent(
+                        "response.ftl", mapOf(
+                            "ip" to ipAddress,
+                            "errorMessage" to "Invalid: IP address format not IPv4 or IPv6 format"
+                        )
+                    )
+                )
+            }
+        }
+        get("/") {
+            call.respond(FreeMarkerContent("index.ftl", mapOf("headers" to headers())))
         }
         static("images") { resources("images") }
         static("style") { resources("style") }

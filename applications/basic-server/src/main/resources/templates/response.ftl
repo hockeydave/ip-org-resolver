@@ -4,7 +4,8 @@
     <section>
         <div class="container">
             <p>
-                Hello, You sent IP address: ${ip}!
+                Hello, You sent IP address: ${ip}
+                <br>${errorMessage}
             </p>
         </div>
     </section>
