@@ -74,6 +74,8 @@ java -jar applications/data-collector-server/build/libs/data-collector-server-1.
 java -jar applications/data-analyzer-server/build/libs/data-analyzer-server-1.0-SNAPSHOT.jar
 ```
 ## Testing
+run:
+./gradlew tests
 ### Unit Tests:
 1.  components/workflow-support/src/test/java/WhoisTest.java
 2. applications/basic-server/src/test/kotlin/test/collective/start/AppTest.kt
