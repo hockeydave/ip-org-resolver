@@ -14,8 +14,12 @@ Java compatibility.
 It uses the [Ktor](https://ktor.io) web framework, and runs on the [Netty](https://netty.io/) web server.
 HTML templates are written using [Freemarker](https://freemarker.apache.org).
 The codebase is tested with [JUnit](https://junit.org/) and uses [Gradle](https://gradle.org) to build a jarfile.
-The [pack cli](https://buildpacks.io/docs/tools/pack/) is used to build a [Docker](https://www.docker.com/) container which is deployed to
-[Google Cloud](https://cloud.google.com/) on Google's Cloud Platform.
+The [pack cli](https://buildpacks.io/docs/tools/pack/) is used to build a [Docker](https://www.docker.com/) container 
+which is deployed to:
+[Heroku Cloud](https://dashboard.heroku.com) on Heroku's Cloud Platform.
+Continuous Integration - GitHub Actions
+Continuous Deployment - Heroku Pipeline
+
 
 ## Getting Started
 
@@ -69,5 +73,10 @@ java -jar applications/data-collector-server/build/libs/data-collector-server-1.
 ```bash
 java -jar applications/data-analyzer-server/build/libs/data-analyzer-server-1.0-SNAPSHOT.jar
 ```
+## Testing
+### Unit Tests:
+1.  components/workflow-support/src/test/java/WhoisTest.java
+2. applications/basic-server/src/test/kotlin/test/collective/start/AppTest.kt
 
-That's a wrap for now.
+### Integration Test:
+1.  applications/basic-server/src/test/kotlin/test/collective/start/AppTest.kt (fun testPostValidIPAddressFormat())
