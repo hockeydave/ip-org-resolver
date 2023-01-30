@@ -7,6 +7,7 @@ mainClassName = "io.collective.start.AppKt"
 dependencies {
     implementation "io.ktor:ktor-freemarker:$ktor_version"
     implementation "io.ktor:ktor-jackson:$ktor_version"
+    implementation project(path: ':components:workflow-support')
 }
 
 tasks.withType(Copy).all {

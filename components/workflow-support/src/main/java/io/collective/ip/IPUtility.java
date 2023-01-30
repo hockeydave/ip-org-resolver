@@ -1,3 +1,5 @@
+package io.collective.ip;
+
 public class IPUtility {
     public enum IPType {IPv4, IPv6, IPv4Private, Neither}
 

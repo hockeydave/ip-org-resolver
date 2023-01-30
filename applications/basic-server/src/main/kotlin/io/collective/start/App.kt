@@ -1,6 +1,7 @@
 package io.collective.start
 
 import freemarker.cache.ClassTemplateLoader
+import io.collective.ip.WhoIs
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.freemarker.*
@@ -27,17 +28,21 @@ fun Application.module() {
         post("/ip-resolve") {
             val formParameters = call.receiveParameters()
             val ipAddress = formParameters["ip"].toString()
-            val ipType = IPUtility.validIPAddress(ipAddress)
-            if (ipType.equals(IPUtility.IPType.IPv4) || ipType.equals(IPUtility.IPType.IPv6)) {
+            val ipType = io.collective.ip.IPUtility.validIPAddress(ipAddress)
+            if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4) || ipType.equals(
+                    io.collective.ip.IPUtility.IPType.IPv6)) {
+                val whois = WhoIs()
+                val result: String = whois.getOrg(ipAddress)
                 call.respond(
                     FreeMarkerContent(
                         "response.ftl", mapOf(
                             "ip" to ipAddress,
-                            "errorMessage" to "Valid:  This is a valid IP Address"
+                            "errorMessage" to "Valid:  This is a valid IP Address for Organization:  "
+                            + result
                         )
                     )
                 )
-            } else if (ipType.equals(IPUtility.IPType.IPv4Private)) {
+            } else if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4Private)) {
                 call.respond(
                     FreeMarkerContent(
                         "response.ftl", mapOf(
@@ -58,6 +63,9 @@ fun Application.module() {
             }
         }
         get("/") {
+            call.respond(FreeMarkerContent("index.ftl", mapOf("headers" to headers())))
+        }
+        get("/ip-org-resolve") {
             call.respond(FreeMarkerContent("index.ftl", mapOf("headers" to headers())))
         }
         static("images") { resources("images") }

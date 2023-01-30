@@ -30,8 +30,6 @@ class AppTest {
     }
 
 
-    // setBody("ip=192.168.0.1")
-    // parametersOf("ip", "192.168.1.1")
     @Test
     fun testPostPrivateInvalidIPAddressFormat() = testApp {
         handleRequest(HttpMethod.Post, "/ip-resolve") {
@@ -40,6 +38,20 @@ class AppTest {
         }.apply {
             assertEquals(HttpStatusCode.OK, response.status())
             assertTrue(response.content!!.contains("Invalid: IP address"))
+        }
+    }
+
+    /**
+     * Integration test for valid IP address.  webapp->whois API and back.
+     */
+    @Test
+    fun testPostValidIPAddressFormat() = testApp {
+        handleRequest(HttpMethod.Post, "/ip-resolve") {
+            addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
+            setBody(listOf("ip" to "100.8.12.180").formUrlEncode())
+        }.apply {
+            assertEquals(HttpStatusCode.OK, response.status())
+            assertTrue(response.content!!.contains("Verizon Business (MCICS)"))
         }
     }
 
