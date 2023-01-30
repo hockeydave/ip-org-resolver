@@ -82,3 +82,9 @@ run:
 
 ### Integration Test:
 1.  applications/basic-server/src/test/kotlin/test/collective/start/AppTest.kt (fun testPostValidIPAddressFormat())
+
+## CI/CD
+On every push a github action is triggered that runs the unit and the integration test. 
+After that a docker image is created that is deployed to the heroku. 
+The file **.github/workflows/ci.yml** can be changed to alter the deployment strategy accordingly. 
+The docker file **Dockerfile** creates the heroku docker image.
