@@ -43,11 +43,64 @@ Building a Docker container and running with Docker.
     ```
 
 ## Development
+The below steps walk through the environment setup necessary to run the application in both local and production
+environments.
+
+### Install dependencies
+
+1. Install PostgreSQL.
+
+   ```bash
+   brew install postgresql
+   brew services run postgres
+   brew status (you should see postgres running)
+   ```
+
+1. Install Flyway.
+
+   ```bash
+   brew install flyway
+   ```
+
+1. Create a PostgreSQL database.
+
+   ```bash
+   createdb
+   ```
+
+### Set up the test environment
+
+1. Create the _ip_test_ database.
+
+   ```bash
+   psql -c "create database ip_test;"
+   psql -c "create user dcp with password 'dcp';"
+   ```
+
+1. Migrate the database with Flyway.
+
+   ```bash
+   flyway -cleanDisabled="false" -user=dcp -password=dcp -url="jdbc:postgresql://localhost:5432/ip_test" -locations=filesystem:databases/iporg clean migrate
+   ```
+
 
 1.  Build a Java Archive (jar) file.
     ```bash
     ./gradlew clean build
     ```
+    ### Set up the development environment
+
+1. Create the _ip_development_ database.
+
+   ```bash
+   psql -c "create database ip_development;"
+   ```
+
+1. Migrate the database with Flyway.
+
+   ```bash
+   flyway -cleanDisabled="false" -user=dcp -password=dcp -url="jdbc:postgresql://localhost:5432/ip_development" -locations=filesystem:databases/iporg clean migrate
+   ```
 
 1.  Configure the port that each server runs on.
     ```bash

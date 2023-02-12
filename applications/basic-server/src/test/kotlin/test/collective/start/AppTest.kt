@@ -7,10 +7,10 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-
 class AppTest {
 
     @Test
+    //@Tag("fast")
     fun testEmptyHome() = testApp {
         handleRequest(HttpMethod.Get, "/").apply {
             assertEquals(HttpStatusCode.OK, response.status())
@@ -19,6 +19,7 @@ class AppTest {
     }
 
     @Test
+    //@Tag("fast")
     fun testPostPrivateIPAddress() = testApp {
         handleRequest(HttpMethod.Post, "/ip-resolve"){
             addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
@@ -31,6 +32,7 @@ class AppTest {
 
 
     @Test
+    //@Tag("fast")
     fun testPostPrivateInvalidIPAddressFormat() = testApp {
         handleRequest(HttpMethod.Post, "/ip-resolve") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
@@ -45,6 +47,7 @@ class AppTest {
      * Integration test for valid IP address.  webapp->whois API and back.
      */
     @Test
+    //@Tag("integrationTest")
     fun testPostValidIPAddressFormat() = testApp {
         handleRequest(HttpMethod.Post, "/ip-resolve") {
             addHeader(HttpHeaders.ContentType, ContentType.Application.FormUrlEncoded.toString())
