@@ -2,6 +2,8 @@ package io.collective.ip;
 
 import java.io.IOException;
 
+import io.collective.entities.Org;
+import io.collective.entities.OrgType;
 import org.apache.commons.net.finger.FingerClient;
 import org.apache.commons.net.whois.WhoisClient;
 
@@ -22,8 +24,7 @@ public class WhoIs extends FingerClient {
      * @param ipAddress  The IP Address to resolve
      * @return a String representation of the Organization Name that owns this IP address.
      */
-    public  String getOrg(String ipAddress) {
-        String organization = null;
+    public  Org getOrg(String ipAddress) {
         try {
             //whois.connect(WhoisClient.DEFAULT_HOST); or lookup.icann.org don't work
             whois.connect("whois.arin.net");
@@ -32,9 +33,10 @@ public class WhoIs extends FingerClient {
 
             int start = result.indexOf("Organization:") + "Organization:   ".length();
             int end = result.indexOf("RegDate:") - 1;   // remove newline
-            if(start >= 0 && end >= 1)
-                organization = result.substring(start, end);
-            return organization;
+            if(start >= 0 && end >= 1) {
+                return new Org(0, result.substring(start, end), OrgType.CORPORATE.ordinal());
+            }
+            else return null;
         } catch (
                 IOException e) {
             System.err.println("Error I/O exception: " + e.getMessage());

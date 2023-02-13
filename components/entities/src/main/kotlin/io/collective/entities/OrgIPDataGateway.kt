@@ -39,20 +39,30 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
 //        )
 //    }
 
-    fun findBy(id: Long): Org? {
-        return template.findBy(
+    fun findById(id: Long): Org? {
+        return template.findById(
             "select id, name, org_type_id from org where id = ?", { rs ->
                 Org(rs.getLong(1), rs.getString(2), rs.getInt(3))
             }, id
         )
     }
 
-    fun findBy(ip: String): OrgIPRecord? {
-        val res = template.findBy(
-            "select id, start_block_ip, end_block_ip, org_id from org_ip where start_block_ip <= ? and end_block_ip >= ?",
+    fun findByIp(ip: String): Org? {
+        val res = template.findByIP(
+            "SELECT org.id, org.name, org.org_type_id FROM org LEFT JOIN org_ip ON org.id = org_ip.org_id where start_block_ip <= ? and end_block_ip >= ?",
             { rs ->
-                OrgIPRecord(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getInt(4))
+                Org(rs.getLong(1), rs.getString(2), rs.getInt(3))
             }, ip
+        )
+        return res
+    }
+
+    fun findByName(name: String): Org? {
+        val res = template.findByName(
+            "SELECT org.id, org.name, org.org_type_id FROM org where org.name=?",
+            { rs ->
+                Org(rs.getLong(1), rs.getString(2), rs.getInt(3))
+            }, name
         )
         return res
     }

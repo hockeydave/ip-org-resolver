@@ -8,9 +8,11 @@ dependencies {
     implementation "io.ktor:ktor-freemarker:$ktor_version"
     implementation "io.ktor:ktor-jackson:$ktor_version"
     implementation project(path: ':components:workflow-support')
+    implementation project(path: ':components:entities')
+    implementation project(path: ':components:database-support')
 }
 
-tasks.withType(Copy).all {
+tasks.withType(Copy).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 

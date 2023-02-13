@@ -9,6 +9,7 @@ import io.collective.testsupport.testDataSource
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class OrgIPServiceTest {
     private val dataSource = testDataSource()
@@ -37,9 +38,9 @@ class OrgIPServiceTest {
     }
 
     @Test
-    fun findBy() {
+    fun findById() {
         val service = OrgIPService(OrgIPDataGateway(dataSource))
-        val org = service.findBy(1)
+        val org = service.findById(1)
         assertEquals("Charter Communications Inc", org.name)
         assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
     }
@@ -47,14 +48,24 @@ class OrgIPServiceTest {
     @Test
     fun findByIp() {
         val service = OrgIPService(OrgIPDataGateway(dataSource))
-        val orgIP = service.findBy("98.25.1.100")
-        assertEquals(1, orgIP.orgId)
+        val org = service.findByIp("98.25.1.100")
+        assertEquals(1, org?.id)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org?.orgType)
     }
 
-    @Test(expected = NullPointerException::class)
+    @Test   //(expected = NullPointerException::class)
     fun findByIpFail() {
         val service = OrgIPService(OrgIPDataGateway(dataSource))
-        service.findBy("22.25.1.100")
+        val org = service.findByIp("22.25.1.100")
+        assertNull(org)
+    }
+
+    @Test
+    fun findByName() {
+        val service = OrgIPService(OrgIPDataGateway(dataSource))
+        val org = service.findByName("T-Mobile USA, Inc. (TMOBI)")
+        assertEquals(3, org?.id)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org?.orgType)
     }
 
     @Test
@@ -62,7 +73,7 @@ class OrgIPServiceTest {
         val service = OrgIPService(OrgIPDataGateway(dataSource))
         service.update(Org(3, "Verizon Data Services LLC (VERIZ-557-Z)", OrgType.MOBILE_ISP.ordinal))
 
-        val org = service.findBy(3)
+        val org = service.findById(3)
         assertEquals("Verizon Data Services LLC (VERIZ-557-Z)", org.name)
         assertEquals(OrgType.MOBILE_ISP.ordinal, org.orgType)
     }

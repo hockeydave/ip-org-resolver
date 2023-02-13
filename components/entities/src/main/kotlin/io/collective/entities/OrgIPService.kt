@@ -1,26 +1,44 @@
 package io.collective.entities
 
 class OrgIPService(private val dataGateway: OrgIPDataGateway) {
+
+    fun create(name: String, typeId: Int): Org {
+        return dataGateway.create(name, typeId)
+    }
+
+    fun create(startIP: String, endIP: String, orgId: Int): OrgIPRecord {
+        return dataGateway.create(startIP, endIP, orgId)
+    }
+
     fun findAll(): List<OrgIPRecord> {
         return dataGateway.findAll().map { OrgIPRecord(it.id, it.startIP, it.endIP, it.orgId) }
     }
 
-    fun findBy(id: Long): Org {
-        val record = dataGateway.findBy(id)!!
+    fun findById(id: Long): Org {
+        val record = dataGateway.findById(id)!!
         return Org(record.id, record.name, record.orgType)
     }
 
-    fun findBy(ip: String): OrgIPRecord {
-        val record = dataGateway.findBy(ip)!!
-        return OrgIPRecord(record.id, record.startIP, record.endIP, record.orgId)
+    fun findByIp(ip: String): Org? {
+        val record = dataGateway.findByIp(ip)
+        return if(record == null) null else {
+            Org(record.id, record.name, record.orgType)
+        }
+    }
+
+    fun findByName(name: String): Org? {
+        val record = dataGateway.findByName(name)
+        return if(record == null) null else {
+            Org(record.id, record.name, record.orgType)
+        }
     }
 
     fun update(org: Org): Org {
-        val record = dataGateway.findBy(org.id)!!
+        val record = dataGateway.findById(org.id)!!
         record.orgType = org.orgType
         record.name = org.name
         dataGateway.update(record)
-        return findBy(record.id)
+        return findById(record.id)
     }
 
 }

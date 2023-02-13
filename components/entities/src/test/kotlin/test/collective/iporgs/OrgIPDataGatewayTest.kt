@@ -45,9 +45,26 @@ class OrgIPDataGatewayTest {
     }
 
     @Test
-    fun findBy() {
+    fun findById() {
         val gateway = OrgIPDataGateway(dataSource)
-        val org = gateway.findBy(1)!!
+        val org = gateway.findById(1)!!
+        assertEquals("Charter Communications Inc", org.name)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
+    }
+
+    @Test
+    fun findByIp() {
+        val gateway = OrgIPDataGateway(dataSource)
+        val org = gateway.findByIp("98.24.0.0")!!
+        assertEquals("Charter Communications Inc", org.name)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
+    }
+
+    @Test
+    fun findByName() {
+        val gateway = OrgIPDataGateway(dataSource)
+        val org = gateway.findByName("Charter Communications Inc")!!
+        assertEquals(1, org.id)
         assertEquals("Charter Communications Inc", org.name)
         assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
     }
@@ -55,13 +72,13 @@ class OrgIPDataGatewayTest {
     @Test
     fun update() {
         val gateway = OrgIPDataGateway(dataSource)
-        val org = gateway.findBy(3)!!
+        val org = gateway.findById(3)!!
 
         org.orgType = OrgType.CLOUD.ordinal
         org.name = "Verizon Data Services LLC (VERIZ-557-Z)"
         gateway.update(org)
 
-        val updated = gateway.findBy(3)!!
+        val updated = gateway.findById(3)!!
         assertEquals("Verizon Data Services LLC (VERIZ-557-Z)", updated.name)
         assertEquals(OrgType.CLOUD.ordinal, updated.orgType)
     }

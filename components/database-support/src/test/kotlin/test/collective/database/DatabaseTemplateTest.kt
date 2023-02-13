@@ -23,10 +23,10 @@ class DatabaseTemplateTest {
     fun testFindObject() {
         val sql = "select id, name from (select 42 as id, 'apples' as name) as dates where id = ?"
 
-        var actual = template.findBy(sql, { ps -> ps.getInt(1) }, 42)
+        var actual = template.findById(sql, { ps -> ps.getInt(1) }, 42)
         assertEquals(42, actual)
 
-        actual = template.findBy(sql, { ps -> ps.getInt(1) }, 44)
+        actual = template.findById(sql, { ps -> ps.getInt(1) }, 44)
         assertNull(actual)
     }
 }

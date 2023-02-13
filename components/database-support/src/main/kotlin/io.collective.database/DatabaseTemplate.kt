@@ -31,25 +31,37 @@ class DatabaseTemplate(private val dataSource: DataSource) {
         return query(connection, sql, {}, mapper)
     }
 
-    fun <T> findBy(sql: String, mapper: (ResultSet) -> T, id: Long): T? {
+    fun <T> findById(sql: String, mapper: (ResultSet) -> T, id: Long): T? {
         dataSource.connection.use { connection ->
-            return findBy(connection, sql, mapper, id)
-        }
-    }
-    fun <T> findBy(sql: String, mapper: (ResultSet) -> T, rangeVal: String): T? {
-        dataSource.connection.use { connection ->
-            return findBy(connection, sql, mapper, rangeVal)
+            return findById(connection, sql, mapper, id)
         }
     }
 
-    private fun <T> findBy(connection: Connection, sql: String, mapper: (ResultSet) -> T, id: Long): T? {
+    private fun <T> findById(connection: Connection, sql: String, mapper: (ResultSet) -> T, id: Long): T? {
         val list = query(connection, sql, { ps -> ps.setLong(1, id) }, mapper)
         return list.firstOrNull()
     }
 
-    private fun <T> findBy(connection: Connection, sql: String, mapper: (ResultSet) -> T, rangeVal: String): T? {
-        val list = query(connection, sql, { ps -> ps.setString(1, rangeVal)
-            ps.setString(2, rangeVal) }, mapper)
+    fun <T> findByIP(sql: String, mapper: (ResultSet) -> T, ipAddress: String): T? {
+        dataSource.connection.use { connection ->
+            return findByIP(connection, sql, mapper, ipAddress)
+        }
+    }
+
+    private fun <T> findByIP(connection: Connection, sql: String, mapper: (ResultSet) -> T, ipAddress: String): T? {
+        val list = query(connection, sql, { ps -> ps.setString(1, ipAddress)
+            ps.setString(2, ipAddress) }, mapper)
+        return list.firstOrNull()
+    }
+
+    fun <T> findByName(sql: String, mapper: (ResultSet) -> T, name: String): T? {
+        dataSource.connection.use { connection ->
+            return findByName(connection, sql, mapper, name)
+        }
+    }
+
+    private fun <T> findByName(connection: Connection, sql: String, mapper: (ResultSet) -> T, name: String): T? {
+        val list = query(connection, sql, { ps -> ps.setString(1, name) }, mapper)
         return list.firstOrNull()
     }
 

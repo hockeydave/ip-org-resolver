@@ -7,9 +7,10 @@ mainClassName = "io.collective.start.analyzer.AppKt"
 dependencies {
     implementation project(":components:data-analyzer")
     implementation project(":components:workflow-support")
+    implementation project(":components:database-support")
 }
 
-tasks.withType(Copy).all {
+tasks.withType(Copy).configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 

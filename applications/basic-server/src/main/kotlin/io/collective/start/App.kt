@@ -1,6 +1,10 @@
 package io.collective.start
 
 import freemarker.cache.ClassTemplateLoader
+import io.collective.database.devDataSource
+import io.collective.entities.Org
+import io.collective.entities.OrgIPDataGateway
+import io.collective.entities.OrgIPService
 import io.collective.ip.WhoIs
 import io.ktor.application.*
 import io.ktor.features.*
@@ -30,18 +34,27 @@ fun Application.module() {
             val ipAddress = formParameters["ip"].toString()
             val ipType = io.collective.ip.IPUtility.validIPAddress(ipAddress)
             if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4) || ipType.equals(
-                    io.collective.ip.IPUtility.IPType.IPv6)) {
-                val whois = WhoIs()
-                val result: String = whois.getOrg(ipAddress)
+                    io.collective.ip.IPUtility.IPType.IPv6
+                )
+            ) {
+                val orgIpService = OrgIPService(OrgIPDataGateway(devDataSource()))
+                var org = orgIpService.findByIp(ipAddress)
+                if (org == null) {
+                    org = WhoIs().getOrg(ipAddress)
+                    val newOrg: Org? = orgIpService.findByName(org.name)
+                    if(newOrg == null)
+                            orgIpService.create(org.name, org.orgType)
+                }
                 call.respond(
                     FreeMarkerContent(
                         "response.ftl", mapOf(
                             "ip" to ipAddress,
                             "errorMessage" to "Valid:  This is a valid IP Address for Organization:  "
-                            + result
+                                    + org?.name
                         )
                     )
                 )
+
             } else if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4Private)) {
                 call.respond(
                     FreeMarkerContent(
