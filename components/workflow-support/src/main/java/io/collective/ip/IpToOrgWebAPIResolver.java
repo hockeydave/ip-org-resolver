@@ -7,10 +7,10 @@ import io.collective.entities.OrgType;
 import org.apache.commons.net.finger.FingerClient;
 import org.apache.commons.net.whois.WhoisClient;
 
-public class WhoIs extends FingerClient {
+public class IpToOrgWebAPIResolver extends FingerClient {
     WhoisClient whois;
 
-    public WhoIs() {
+    public IpToOrgWebAPIResolver() {
         whois = new WhoisClient();
     }
 

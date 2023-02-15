@@ -1,15 +1,13 @@
 package test.collective.iporgs
 
 import io.collective.database.DatabaseTemplate
-import io.collective.entities.Org
-import io.collective.entities.OrgIPDataGateway
-import io.collective.entities.OrgIPService
-import io.collective.entities.OrgType
+import io.collective.entities.*
 import io.collective.testsupport.testDataSource
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 class OrgIPServiceTest {
     private val dataSource = testDataSource()
@@ -30,6 +28,23 @@ class OrgIPServiceTest {
         }
     }
 
+    @Test
+    fun createIpOrg() {
+        val service = OrgIPService(OrgIPDataGateway(dataSource))
+        val orgIpRecord = service.createOrgIp(OrgIPRecord(3, "100.0.0.0", "100.19.255.255", 3))
+        assertTrue(orgIpRecord.id > 0)
+        assertEquals("100.0.0.0", orgIpRecord.startIP)
+        assertEquals("100.19.255.255", orgIpRecord.endIP)
+    }
+
+    @Test
+    fun createOrg() {
+        val service = OrgIPService(OrgIPDataGateway(dataSource))
+        val org = service.createOrg("AT&T Mobility LLC", OrgType.RESIDENTIAL_ISP.ordinal)
+        assertTrue(org.id > 0)
+        assertEquals("AT&T Mobility LLC", org.name)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
+    }
     @Test
     fun findAll() {
         val service = OrgIPService(OrgIPDataGateway(dataSource))

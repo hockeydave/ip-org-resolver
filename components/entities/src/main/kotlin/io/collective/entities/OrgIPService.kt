@@ -2,12 +2,12 @@ package io.collective.entities
 
 class OrgIPService(private val dataGateway: OrgIPDataGateway) {
 
-    fun create(name: String, typeId: Int): Org {
-        return dataGateway.create(name, typeId)
+    fun createOrg(name: String, typeId: Int): Org {
+        return dataGateway.createOrg(name, typeId)
     }
 
-    fun create(startIP: String, endIP: String, orgId: Int): OrgIPRecord {
-        return dataGateway.create(startIP, endIP, orgId)
+    fun createOrgIp(orgIPRecord: OrgIPRecord): OrgIPRecord {
+        return dataGateway.createOrgIp(orgIPRecord.startIP, orgIPRecord.endIP, orgIPRecord.orgId)
     }
 
     fun findAll(): List<OrgIPRecord> {

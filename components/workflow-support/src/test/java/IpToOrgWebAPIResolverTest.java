@@ -1,5 +1,5 @@
 import io.collective.entities.Org;
-import io.collective.ip.WhoIs;
+import io.collective.ip.IpToOrgWebAPIResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -7,11 +7,11 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class WhoisTest {
-    WhoIs whois;
+public class IpToOrgWebAPIResolverTest {
+    IpToOrgWebAPIResolver whois;
     @Before
     public void setUp()  {
-        whois = new WhoIs();
+        whois = new IpToOrgWebAPIResolver();
     }
 
     @After

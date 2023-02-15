@@ -5,7 +5,7 @@ import io.collective.database.devDataSource
 import io.collective.entities.Org
 import io.collective.entities.OrgIPDataGateway
 import io.collective.entities.OrgIPService
-import io.collective.ip.WhoIs
+import io.collective.ip.IpToOrgWebAPIResolver
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.freemarker.*
@@ -40,10 +40,10 @@ fun Application.module() {
                 val orgIpService = OrgIPService(OrgIPDataGateway(devDataSource()))
                 var org = orgIpService.findByIp(ipAddress)
                 if (org == null) {
-                    org = WhoIs().getOrg(ipAddress)
+                    org = IpToOrgWebAPIResolver().getOrg(ipAddress)
                     val newOrg: Org? = orgIpService.findByName(org.name)
                     if(newOrg == null)
-                            orgIpService.create(org.name, org.orgType)
+                            orgIpService.createOrg(org.name, org.orgType)
                 }
                 call.respond(
                     FreeMarkerContent(

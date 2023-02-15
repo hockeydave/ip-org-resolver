@@ -29,9 +29,9 @@ class OrgIPDataGatewayTest {
     }
 
     @Test
-    fun create() {
+    fun createOrg() {
         val gateway = OrgIPDataGateway(dataSource)
-        val org = gateway.create("AT&T Mobility LLC", OrgType.RESIDENTIAL_ISP.ordinal)
+        val org = gateway.createOrg("AT&T Mobility LLC", OrgType.RESIDENTIAL_ISP.ordinal)
         assertTrue(org.id > 0)
         assertEquals("AT&T Mobility LLC", org.name)
         assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
