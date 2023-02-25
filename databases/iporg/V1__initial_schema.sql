@@ -12,8 +12,8 @@ CREATE TABLE org (
 
 CREATE TABLE org_ip (
                           id serial PRIMARY KEY,
-                          start_block_ip  VARCHAR(40),
-                          end_block_ip VARCHAR(40),
+                          start_block_ip  BIGINT,
+                          end_block_ip BIGINT,
                           org_id INT REFERENCES org(id),
                           created_at TIMESTAMP without TIME ZONE DEFAULT now(),
                           updated_at TIMESTAMP without time zone default now()

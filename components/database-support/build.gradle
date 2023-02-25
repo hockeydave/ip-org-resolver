@@ -2,9 +2,10 @@ version "1.0-SNAPSHOT"
 
 dependencies {
     implementation 'com.zaxxer:HikariCP:3.2.0'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.10.2'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.10.2'
-    implementation 'org.postgresql:postgresql:42.2.10'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.14.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
+    implementation 'org.postgresql:postgresql:42.5.4'
+
 
     testImplementation project(":components:test-support")
 }

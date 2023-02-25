@@ -1,5 +1,8 @@
 package io.collective.database
 
+
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.sql.*
 import java.time.LocalDate
 import javax.sql.DataSource
@@ -42,15 +45,16 @@ class DatabaseTemplate(private val dataSource: DataSource) {
         return list.firstOrNull()
     }
 
-    fun <T> findByIP(sql: String, mapper: (ResultSet) -> T, ipAddress: String): T? {
+    fun <T> findByIP(sql: String, mapper: (ResultSet) -> T, ipAddress: BigInteger): T? {
         dataSource.connection.use { connection ->
             return findByIP(connection, sql, mapper, ipAddress)
         }
     }
 
-    private fun <T> findByIP(connection: Connection, sql: String, mapper: (ResultSet) -> T, ipAddress: String): T? {
-        val list = query(connection, sql, { ps -> ps.setString(1, ipAddress)
-            ps.setString(2, ipAddress) }, mapper)
+    private fun <T> findByIP(connection: Connection, sql: String, mapper: (ResultSet) -> T, ipAddress: BigInteger): T? {
+        val ip = BigDecimal(ipAddress)
+        val list = query(connection, sql, { ps -> ps.setBigDecimal(1, ip)
+            ps.setBigDecimal(2, ip) }, mapper)
         return list.firstOrNull()
     }
 
@@ -113,7 +117,8 @@ class DatabaseTemplate(private val dataSource: DataSource) {
                 is Long -> statement.setLong(parameterIndex, param)
                 is Boolean -> statement.setBoolean(parameterIndex, param)
                 is LocalDate -> statement.setDate(parameterIndex, Date.valueOf(param))
-
+                is BigInteger -> statement.setBigDecimal(parameterIndex, BigDecimal(param))
+                is BigDecimal -> statement.setBigDecimal(parameterIndex, param)
             }
         }
     }

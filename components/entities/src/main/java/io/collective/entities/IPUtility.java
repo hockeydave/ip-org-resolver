@@ -1,4 +1,8 @@
-package io.collective.ip;
+package io.collective.entities;
+
+import java.math.BigInteger;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class IPUtility {
     public enum IPType {IPv4, IPv6, IPv4Private, Neither}
@@ -72,7 +76,7 @@ public class IPUtility {
         return false;
     }
 
-    public static IPType validIPAddress(String ip) {
+    public static IPType getIpAddressType(String ip) {
         if (ip.chars().filter(ch -> ch == '.').count() == 3 && isValidIPv4(ip)) {
             if(isPrivateIPv4(ip))
                 return IPType.IPv4Private;
@@ -81,5 +85,28 @@ public class IPUtility {
         } else if (ip.chars().filter(ch -> ch == ':').count() == 7 && isValidIPv6(ip)) {
             return IPType.IPv6;
         } else return IPType.Neither;
+    }
+
+    private static long ipToLong(String ipAddress) {
+        long result = 0;
+        String[] atoms = ipAddress.split("\\.");
+
+        for (int i = 3; i >= 0; i--) {
+            result |= (Long.parseLong(atoms[3 - i]) << (i * 8));
+        }
+
+        return result;
+    }
+
+    public static BigInteger convertIPtoBigInteger(String ipString) throws UnknownHostException {
+        InetAddress ia = java.net.InetAddress.getByName(ipString);
+        byte[] byteArr = ia.getAddress();
+
+        if (ia instanceof java.net.Inet6Address) {
+            return new BigInteger(1, byteArr);
+        } else if (ia instanceof java.net.Inet4Address) {
+            return  BigInteger.valueOf(ipToLong(ipString));
+        }
+        return null;
     }
 }

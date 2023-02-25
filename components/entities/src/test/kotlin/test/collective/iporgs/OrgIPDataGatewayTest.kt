@@ -1,6 +1,7 @@
 package test.collective.iporgs
 
 import io.collective.database.DatabaseTemplate
+import io.collective.entities.IPUtility
 import io.collective.entities.OrgIPDataGateway
 import io.collective.entities.OrgType
 import io.collective.testsupport.testDataSource
@@ -23,8 +24,12 @@ class OrgIPDataGatewayTest {
                     + OrgType.RESIDENTIAL_ISP.ordinal + ");")
             execute("INSERT INTO org(id, name, org_type_id) values (3, 'T-Mobile USA, Inc. (TMOBI)',"
                     + OrgType.RESIDENTIAL_ISP.ordinal + ");")
-            execute("insert into org_ip(id, start_block_ip, end_block_ip, org_id) values (1, '98.24.0.0', '98.31.255.255', 1)")
-            execute("insert into org_ip(id, start_block_ip, end_block_ip, org_id) values (2, '98.6.0.0', '98.6.255.255', 1)")
+            val s1 = String.format("insert into org_ip(id, start_block_ip, end_block_ip, org_id) values (1, '%d', '%d', 1)",
+                IPUtility.convertIPtoBigInteger("98.24.0.0"), IPUtility.convertIPtoBigInteger("98.31.255.255"))
+            execute(s1)
+            val s2 = String.format("insert into org_ip(id, start_block_ip, end_block_ip, org_id) values (2, '%d', '%d', 1)",
+                IPUtility.convertIPtoBigInteger("98.6.0.0"), IPUtility.convertIPtoBigInteger("98.6.255.255"))
+            execute(s2)
         }
     }
 

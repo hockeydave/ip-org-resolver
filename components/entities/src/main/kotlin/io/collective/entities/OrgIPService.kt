@@ -7,7 +7,7 @@ class OrgIPService(private val dataGateway: OrgIPDataGateway) {
     }
 
     fun createOrgIp(orgIPRecord: OrgIPRecord): OrgIPRecord {
-        return dataGateway.createOrgIp(orgIPRecord.startIP, orgIPRecord.endIP, orgIPRecord.orgId)
+        return dataGateway.createOrgIp(orgIPRecord.id, orgIPRecord.startIP, orgIPRecord.endIP, orgIPRecord.orgId)
     }
 
     fun findAll(): List<OrgIPRecord> {

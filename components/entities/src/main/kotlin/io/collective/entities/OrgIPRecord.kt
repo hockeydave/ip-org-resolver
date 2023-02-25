@@ -1,3 +1,5 @@
 package io.collective.entities
 
-data class OrgIPRecord(val id: Long, val startIP: String, val endIP: String, val orgId: Int)
+import java.math.BigInteger
+
+data class OrgIPRecord(val id: Long, val startIP: BigInteger, val endIP: BigInteger, val orgId: Int)

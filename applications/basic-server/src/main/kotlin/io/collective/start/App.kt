@@ -2,6 +2,7 @@ package io.collective.start
 
 import freemarker.cache.ClassTemplateLoader
 import io.collective.database.devDataSource
+import io.collective.entities.IPUtility
 import io.collective.entities.Org
 import io.collective.entities.OrgIPDataGateway
 import io.collective.entities.OrgIPService
@@ -32,9 +33,9 @@ fun Application.module() {
         post("/ip-resolve") {
             val formParameters = call.receiveParameters()
             val ipAddress = formParameters["ip"].toString()
-            val ipType = io.collective.ip.IPUtility.validIPAddress(ipAddress)
-            if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4) || ipType.equals(
-                    io.collective.ip.IPUtility.IPType.IPv6
+            val ipType = IPUtility.getIpAddressType(ipAddress)
+            if (ipType.equals(IPUtility.IPType.IPv4) || ipType.equals(
+                    IPUtility.IPType.IPv6
                 )
             ) {
                 val orgIpService = OrgIPService(OrgIPDataGateway(devDataSource()))
@@ -55,7 +56,7 @@ fun Application.module() {
                     )
                 )
 
-            } else if (ipType.equals(io.collective.ip.IPUtility.IPType.IPv4Private)) {
+            } else if (ipType.equals(IPUtility.IPType.IPv4Private)) {
                 call.respond(
                     FreeMarkerContent(
                         "response.ftl", mapOf(
