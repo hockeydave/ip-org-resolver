@@ -9,7 +9,7 @@ fun createDatasource(
     setJdbcUrl(jdbcUrl)
     setUsername(username)
     setPassword(password)
-    10.also { maximumPoolSize = it }
+    maximumPoolSize = 10
 }
 
 fun shutdownDataSource(dataSource: HikariDataSource) {
