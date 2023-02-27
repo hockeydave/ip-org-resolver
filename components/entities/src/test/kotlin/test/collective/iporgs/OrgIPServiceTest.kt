@@ -2,7 +2,9 @@ package test.collective.iporgs
 
 import io.collective.database.DatabaseTemplate
 import io.collective.entities.*
+import io.collective.testsupport.shutdownDataSource
 import io.collective.testsupport.testDataSource
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -30,6 +32,10 @@ class OrgIPServiceTest {
                 IPUtility.convertIPtoBigInteger("98.6.0.0"), IPUtility.convertIPtoBigInteger("98.6.255.255"))
             execute(s2)
         }
+    }
+    @After
+    fun after() {
+        shutdownDataSource(dataSource)
     }
 
     @Test

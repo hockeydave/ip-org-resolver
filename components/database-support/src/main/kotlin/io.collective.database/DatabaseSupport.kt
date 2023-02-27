@@ -11,3 +11,7 @@ fun createDatasource(
     setPassword(password)
     10.also { maximumPoolSize = it }
 }
+
+fun shutdownDataSource(dataSource: HikariDataSource) {
+    dataSource.close()
+}
