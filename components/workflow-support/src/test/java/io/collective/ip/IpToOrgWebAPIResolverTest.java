@@ -1,5 +1,6 @@
+package io.collective.ip;
+
 import io.collective.entities.Org;
-import io.collective.ip.IpToOrgWebAPIResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

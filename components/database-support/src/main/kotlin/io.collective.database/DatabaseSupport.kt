@@ -9,4 +9,5 @@ fun createDatasource(
     setJdbcUrl(jdbcUrl)
     setUsername(username)
     setPassword(password)
+    10.also { maximumPoolSize = it }
 }
