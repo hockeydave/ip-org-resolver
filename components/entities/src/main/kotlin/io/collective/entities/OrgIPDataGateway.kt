@@ -9,7 +9,7 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private val template = DatabaseTemplate(dataSource)
 
-    fun createOrgIp(startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
+    private fun createOrgIp(startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
         return template.create(
             "insert into org_ip (start_block_ip, end_block_ip, org_id) values (?, ?, ?)", { id ->
                 OrgIPRecord(id, startIP, endIP, orgId)
@@ -90,5 +90,8 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
         return org
     }
 
+    fun save(startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
+        return createOrgIp(startIP, endIP, orgId)
+    }
 
 }

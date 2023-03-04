@@ -1,0 +1,15 @@
+version "1.0-SNAPSHOT"
+
+processTestResources {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+dependencies {
+    implementation project(":components:entities")
+
+    implementation project(":components:rest-support")
+    implementation project(":components:workflow-support")
+    implementation project(":components:json-support")
+
+    testImplementation project(":components:test-support")
+}
