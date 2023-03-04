@@ -94,4 +94,8 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
         return createOrgIp(startIP, endIP, orgId)
     }
 
+    fun clear() {
+        template.execute("delete from org_ip;")
+    }
+
 }

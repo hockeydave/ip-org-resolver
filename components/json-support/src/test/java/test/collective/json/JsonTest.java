@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.collective.json.Item;
 import io.collective.json.Json;
-import io.collective.json.Networks;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 
 public class JsonTest {
+
 
     @Test
     public void json() throws IOException {

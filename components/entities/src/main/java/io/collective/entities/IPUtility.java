@@ -1,8 +1,8 @@
 package io.collective.entities;
 
+import com.google.common.net.InetAddresses;
+
 import java.math.BigInteger;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class IPUtility {
     public enum IPType {IPv4, IPv6, IPv4Private, Neither}
@@ -87,26 +87,30 @@ public class IPUtility {
         } else return IPType.Neither;
     }
 
-    private static long ipToLong(String ipAddress) {
-        long result = 0;
-        String[] atoms = ipAddress.split("\\.");
+//    private static long ipToLong(String ipAddress) {
+//        long result = 0;
+//        String[] atoms = ipAddress.split("\\.");
+//
+//        for (int i = 3; i >= 0; i--) {
+//            result |= (Long.parseLong(atoms[3 - i]) << (i * 8));
+//        }
+//
+//        return result;
+//    }
 
-        for (int i = 3; i >= 0; i--) {
-            result |= (Long.parseLong(atoms[3 - i]) << (i * 8));
-        }
-
-        return result;
-    }
-
-    public static BigInteger convertIPtoBigInteger(String ipString) throws UnknownHostException {
-        InetAddress ia = java.net.InetAddress.getByName(ipString);
-        byte[] byteArr = ia.getAddress();
-
-        if (ia instanceof java.net.Inet6Address) {
-            return new BigInteger(1, byteArr);
-        } else if (ia instanceof java.net.Inet4Address) {
-            return  BigInteger.valueOf(ipToLong(ipString));
-        }
-        return null;
+//    public static BigInteger convertIPtoBigInteger(String ipString) throws UnknownHostException {
+//        InetAddress ia = java.net.InetAddress.getByName(ipString);
+//        byte[] byteArr = ia.getAddress();
+//
+//        if (ia instanceof java.net.Inet6Address) {
+//            return new BigInteger(1, byteArr);
+//        } else if (ia instanceof java.net.Inet4Address) {
+//            return  BigInteger.valueOf(ipToLong(ipString));
+//        }
+//        return null;
+//    }
+//}
+public static BigInteger convertIPtoBigInteger(String ipString) {
+        return InetAddresses.toBigInteger(InetAddresses.forString(ipString));
     }
 }

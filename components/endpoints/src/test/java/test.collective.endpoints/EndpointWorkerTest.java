@@ -4,6 +4,8 @@ import io.collective.entities.*;
 import io.collective.endpoints.EndpointTask;
 import io.collective.endpoints.EndpointWorker;
 import io.collective.restsupport.RestTemplate;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -15,6 +17,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class EndpointWorkerTest {
+    @Before
+    public void before() {
+        OrgIPDataGateway gateway = new OrgIPDataGateway(testDataSource());
+        gateway.clear();
+    }
+
+    @After
+    public void after() {
+        OrgIPDataGateway gateway = new OrgIPDataGateway(testDataSource());
+        gateway.clear();
+    }
     @Test
     public void finder() throws IOException, NullPointerException {
         String json = new String(Objects.requireNonNull(getClass()

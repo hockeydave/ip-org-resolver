@@ -2,10 +2,10 @@ package io.collective.endpoints;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import io.collective.entities.IPUtility;
 import io.collective.entities.OrgIPDataGateway;
 import io.collective.json.Item;
 import io.collective.json.Json;
-import io.collective.json.Networks;
 import io.collective.restsupport.RestTemplate;
 import io.collective.workflow.Worker;
 import org.jetbrains.annotations.NotNull;
@@ -46,10 +46,12 @@ public class EndpointWorker implements Worker<EndpointTask> {
                 Json json = mapper.readValue(response, Json.class);
                 for (Item item : json.getNetworks()) {
                     // TODO fix orgId
-                    gateway.save(new BigInteger(item.getStartAddress()), new BigInteger(item.getEndAddress()), 1);
+                    BigInteger startAddress = IPUtility.convertIPtoBigInteger(item.getStartAddress());
+                    BigInteger endAddress = IPUtility.convertIPtoBigInteger(item.getEndAddress());
+                    gateway.save(startAddress, endAddress, 1);
                 }
             } catch (Exception e) {
-                logger.error(e + " Cannot process JSON string for Task" + response);
+                logger.error(e + " .Cannot process JSON string for Task" + response);
             }
         }
     }
