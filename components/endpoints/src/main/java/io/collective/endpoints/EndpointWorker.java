@@ -44,8 +44,7 @@ public class EndpointWorker implements Worker<EndpointTask> {
                 JsonMapper mapper = new JsonMapper();
                 mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
                 Json json = mapper.readValue(response, Json.class);
-                Networks networks = json.getNetworks();
-                for (Item item : networks.getItems()) {
+                for (Item item : json.getNetworks()) {
                     // TODO fix orgId
                     gateway.save(new BigInteger(item.getStartAddress()), new BigInteger(item.getEndAddress()), 1);
                 }
