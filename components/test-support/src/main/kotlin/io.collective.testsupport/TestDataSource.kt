@@ -1,7 +1,7 @@
 package io.collective.testsupport
 
 import com.zaxxer.hikari.HikariDataSource
-import io.collective.database.*
+import io.collective.database.createDatasource
 import javax.sql.DataSource
 
 const val testJdbcUrl = "jdbc:postgresql://localhost:5432/ip_test"

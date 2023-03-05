@@ -14,7 +14,7 @@ import kotlin.test.assertTrue
 
 class OrgIPDataGatewayTest {
     private val dataSource = testDataSource()
-    // Tmobile blocks
+    // T-mobile blocks
     private val ipStartBlock1 = "100.128.0.0"
     private val ipEndBlock1 = "100.128.0.9"
     private val ipMidRange1 = "100.128.0.4"

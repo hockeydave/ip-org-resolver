@@ -1,11 +1,11 @@
 package io.collective.ip;
 
-import java.io.IOException;
-
 import io.collective.entities.Org;
 import io.collective.entities.OrgType;
 import org.apache.commons.net.finger.FingerClient;
 import org.apache.commons.net.whois.WhoisClient;
+
+import java.io.IOException;
 
 public class IpToOrgWebAPIResolver extends FingerClient {
     WhoisClient whois;

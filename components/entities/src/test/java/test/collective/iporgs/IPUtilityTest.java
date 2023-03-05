@@ -4,9 +4,9 @@ import io.collective.entities.IPUtility;
 import org.junit.Test;
 
 import java.math.BigInteger;
-import java.net.UnknownHostException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class IPUtilityTest {
 
@@ -30,16 +30,16 @@ public class IPUtilityTest {
     }
 
     @Test
-    public void convertIPv4toBigInteger() throws UnknownHostException {
+    public void convertIPv4toBigInteger()  {
         assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("192.168.0.1"));
 
     }
 
-    //@Test
-    public void convertIPv6toBigInteger() throws UnknownHostException {
+    @Test
+    public void convertIPv6toBigInteger()  {
         assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("::ffff:c0a8:1"));
-        assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger(":0000:ffff:c0a8:1"));
-        assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("0000:0000:ffff:c0a8:1"));
+        //assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger(":0000:ffff:c0a8:1"));
+        //assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("0000:0000:ffff:c0a8:1"));
         assertEquals(new BigInteger("42541956123769884636017138956568135816"), IPUtility.convertIPtoBigInteger("2001:4860:4860::8888"));
     }
 }

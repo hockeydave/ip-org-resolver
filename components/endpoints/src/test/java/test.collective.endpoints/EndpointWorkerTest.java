@@ -1,8 +1,10 @@
 package test.collective.endpoints;
 
-import io.collective.entities.*;
 import io.collective.endpoints.EndpointTask;
 import io.collective.endpoints.EndpointWorker;
+import io.collective.entities.Org;
+import io.collective.entities.OrgIPDataGateway;
+import io.collective.entities.OrgType;
 import io.collective.restsupport.RestTemplate;
 import org.junit.After;
 import org.junit.Before;
