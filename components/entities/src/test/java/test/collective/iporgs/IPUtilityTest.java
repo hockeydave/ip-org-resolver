@@ -38,8 +38,6 @@ public class IPUtilityTest {
     @Test
     public void convertIPv6toBigInteger()  {
         assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("::ffff:c0a8:1"));
-        //assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger(":0000:ffff:c0a8:1"));
-        //assertEquals(BigInteger.valueOf(3232235521L), IPUtility.convertIPtoBigInteger("0000:0000:ffff:c0a8:1"));
         assertEquals(new BigInteger("42541956123769884636017138956568135816"), IPUtility.convertIPtoBigInteger("2001:4860:4860::8888"));
     }
 }
