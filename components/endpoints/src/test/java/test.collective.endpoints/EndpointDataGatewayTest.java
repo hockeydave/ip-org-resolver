@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 public class EndpointDataGatewayTest {
 
     @Test
-    public void readdy() {
+    public void ready() {
         EndpointDataGateway gateway = new EndpointDataGateway();
 
         assertEquals(1, gateway.findReady("ready").size());

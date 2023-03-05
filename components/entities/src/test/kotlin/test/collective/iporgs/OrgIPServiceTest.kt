@@ -13,12 +13,12 @@ import kotlin.test.assertTrue
 
 class OrgIPServiceTest {
     private val dataSource = testDataSource()
+    private var testOrg: Org? = null
 
     @Before
     fun before() {
+        clean()
         DatabaseTemplate(dataSource).apply {
-            execute("delete from org_ip")
-            execute("delete from org")
             execute("INSERT INTO org(id, name, org_type_id) values (1, 'Charter Communications Inc',"
                     + OrgType.RESIDENTIAL_ISP.ordinal + ");")
             execute("INSERT INTO org(id, name, org_type_id) values (2, 'Verizon Business (MCICS)',"
@@ -35,7 +35,16 @@ class OrgIPServiceTest {
     }
     @After
     fun after() {
+        clean()
         shutdownDataSource(dataSource)
+    }
+    private fun clean() {
+        val s = String.format("delete from org where id = %d", testOrg?.id ?: 1)
+        DatabaseTemplate(dataSource).apply {
+            execute("delete from org_ip where org_id in (1, 2, 3)")
+            execute("delete from org where id in (1, 2, 3)")
+            execute(s)
+        }
     }
 
     @Test
@@ -52,10 +61,10 @@ class OrgIPServiceTest {
     @Test
     fun createOrg() {
         val service = OrgIPService(OrgIPDataGateway(dataSource))
-        val org = service.createOrg("AT&T Mobility LLC", OrgType.RESIDENTIAL_ISP.ordinal)
-        assertTrue(org.id > 0)
-        assertEquals("AT&T Mobility LLC", org.name)
-        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, org.orgType)
+        testOrg = service.createOrg("AT&T Mobility LLC - OrgIPServiceTest", OrgType.RESIDENTIAL_ISP.ordinal)
+        assertTrue(testOrg!!.id > 0)
+        assertEquals("AT&T Mobility LLC - OrgIPServiceTest", testOrg!!.name)
+        assertEquals(OrgType.RESIDENTIAL_ISP.ordinal, testOrg!!.orgType)
     }
     @Test
     fun findAll() {

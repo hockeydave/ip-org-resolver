@@ -48,7 +48,7 @@ public class EndpointWorker implements Worker<EndpointTask> {
                     // TODO fix orgId
                     BigInteger startAddress = IPUtility.convertIPtoBigInteger(item.getStartAddress());
                     BigInteger endAddress = IPUtility.convertIPtoBigInteger(item.getEndAddress());
-                    gateway.save(startAddress, endAddress, 1);
+                    gateway.save(startAddress, endAddress, task.getOrgId());
                 }
             } catch (Exception e) {
                 logger.error(e + " .Cannot process JSON string for Task" + response);

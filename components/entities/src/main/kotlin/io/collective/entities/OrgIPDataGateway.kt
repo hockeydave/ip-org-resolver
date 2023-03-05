@@ -9,14 +9,15 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
     private val logger = LoggerFactory.getLogger(this.javaClass)
     private val template = DatabaseTemplate(dataSource)
 
-    private fun createOrgIp(startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
+    private fun createOrgIp(startIP: BigInteger, endIP: BigInteger, orgId: Long): OrgIPRecord {
         return template.create(
             "insert into org_ip (start_block_ip, end_block_ip, org_id) values (?, ?, ?)", { id ->
                 OrgIPRecord(id, startIP, endIP, orgId)
             }, startIP, endIP, orgId
         )
     }
-    fun createOrgIp(pkey: Long, startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
+
+    fun createOrgIp(pkey: Long, startIP: BigInteger, endIP: BigInteger, orgId: Long): OrgIPRecord {
         return template.create(
             "insert into org_ip (id, start_block_ip, end_block_ip, org_id) values (?, ?, ?, ?)", { id ->
                 OrgIPRecord(id, startIP, endIP, orgId)
@@ -39,9 +40,23 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
                 rs.getLong(1),
                 rs.getBigDecimal(2).toBigInteger(),
                 rs.getBigDecimal(3).toBigInteger(),
-                rs.getInt(4)
+                rs.getLong(4)
             )
         }
+    }
+
+    fun findAllByOrg(orgId: Long): List<OrgIPRecord> {
+        return template.findAllByOrg(
+            "select id, start_block_ip, end_block_ip, org_id from org_ip where org_id = ? order by start_block_ip asc",
+            { rs ->
+                OrgIPRecord(
+                    rs.getLong(1),
+                    rs.getBigDecimal(2).toBigInteger(),
+                    rs.getBigDecimal(3).toBigInteger(),
+                    rs.getLong(4)
+                )
+            }, orgId
+        )
     }
 
 //    fun findBy(id: Long): OrgIPRecord? {
@@ -90,12 +105,14 @@ class OrgIPDataGateway(private val dataSource: DataSource) {
         return org
     }
 
-    fun save(startIP: BigInteger, endIP: BigInteger, orgId: Int): OrgIPRecord {
+    fun save(startIP: BigInteger, endIP: BigInteger, orgId: Long): OrgIPRecord {
         return createOrgIp(startIP, endIP, orgId)
     }
 
-    fun clear() {
-        template.execute("delete from org_ip;")
+
+    fun clear(orgId: Long) {
+        template.update("delete from org_ip where org_id=?;", orgId)
+        template.update("delete from org where id=?", orgId)
     }
 
 }

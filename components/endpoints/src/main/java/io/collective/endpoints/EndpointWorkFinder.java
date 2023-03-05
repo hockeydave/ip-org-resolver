@@ -19,8 +19,9 @@ public class EndpointWorkFinder implements WorkFinder<EndpointTask> {
     @NotNull
     @Override
     public List<EndpointTask> findRequested(@NotNull String name) {
+        long orgId = 2; // TODO fix orgId
         return gateway.findReady(name).stream()
-                .map(record -> new EndpointTask(record.getName())).collect(Collectors.toList());
+                .map(record -> new EndpointTask(record.getName(), orgId)).collect(Collectors.toList());
     }
 
     @Override

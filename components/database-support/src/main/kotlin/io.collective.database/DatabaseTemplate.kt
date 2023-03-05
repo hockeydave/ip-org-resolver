@@ -34,6 +34,16 @@ class DatabaseTemplate(private val dataSource: DataSource) {
         return query(connection, sql, {}, mapper)
     }
 
+    fun <T> findAllByOrg(sql: String, mapper: (ResultSet) -> T, orgId: Long): List<T> {
+        dataSource.connection.use { connection ->
+            return findAllByOrg(connection, sql, mapper, orgId)
+        }
+    }
+
+    private fun <T> findAllByOrg(connection: Connection, sql: String, mapper: (ResultSet) -> T, orgId: Long): List<T> {
+        return query(connection, sql, {ps -> ps.setLong(1, orgId)}, mapper)
+    }
+
     fun <T> findById(sql: String, mapper: (ResultSet) -> T, id: Long): T? {
         dataSource.connection.use { connection ->
             return findById(connection, sql, mapper, id)
