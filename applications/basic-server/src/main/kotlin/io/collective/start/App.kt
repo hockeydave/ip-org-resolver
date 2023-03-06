@@ -46,20 +46,20 @@ fun Application.module() {
                 var org = orgIpService.findByIp(ipAddress)
                 if (org == null) {
                     // If not in the database, get the Org from the web API
-                    org = IpToOrgWebAPIResolver().getOrg(ipAddress)
+                    val fullOrg = IpToOrgWebAPIResolver().getOrg(ipAddress)
                     // Check if the org is in the database, but just missing the update for this IP range
-                    val newOrg: Org? = orgIpService.findByName(org.name)
+                    val newOrg: Org? = orgIpService.findByName(fullOrg.org.name)
+                    org = fullOrg.org
                     if(newOrg == null) {
                         // Org is missing from database so create it
-                        val orgCreated = orgIpService.createOrg(org.name, org.orgType)
+                        val orgCreated = orgIpService.createOrg(fullOrg.org.name, fullOrg.org.orgType)
 
                         val template = RestTemplate()
                         val gateway = OrgIPDataGateway(devDataSource())
 
 
                         val worker = EndpointWorker(template, gateway)
-                        // TODO parse the response to get the URL or IP range.
-                        worker.execute(EndpointTask("https://rdap.arin.net/registry/entity/CC-3517", orgCreated.id))
+                        worker.execute(EndpointTask(fullOrg.url, orgCreated.id))
                     } // TODO else, update the Org for this IP range.
                 }
                 call.respond(
@@ -67,7 +67,7 @@ fun Application.module() {
                         "response.ftl", mapOf(
                             "ip" to ipAddress,
                             "errorMessage" to "Valid:  This is a valid IP Address for Organization:  "
-                                    + org?.name
+                                    + org.name
                         )
                     )
                 )

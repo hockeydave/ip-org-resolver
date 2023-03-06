@@ -1,5 +1,6 @@
 package io.collective.ip;
 
+import io.collective.entities.FullOrg;
 import io.collective.entities.Org;
 import io.collective.entities.OrgType;
 import org.apache.commons.net.finger.FingerClient;
@@ -21,22 +22,35 @@ public class IpToOrgWebAPIResolver extends FingerClient {
      * to the queue for pulling all the IP ranges for this Organization.
      * whois 184.59.132.132 | grep '^Ref' | grep entity | awk '{print $2}' | xargs curl -s | jq '.networks[]
      * | {startAddress:.startAddress,endAddress:.endAddress}'
-     * @param ipAddress  The IP Address to resolve
+     *
+     * @param ipAddress The IP Address to resolve
      * @return a String representation of the Organization Name that owns this IP address.
      */
-    public  Org getOrg(String ipAddress) {
+    public FullOrg getOrg(String ipAddress) {
         try {
             //whois.connect(WhoisClient.DEFAULT_HOST); or lookup.icann.org don't work
             whois.connect("whois.arin.net");
             String result = whois.query(ipAddress);
             whois.disconnect();
 
-            int start = result.indexOf("Organization:") + "Organization:   ".length();
-            int end = result.indexOf("RegDate:") - 1;   // remove newline
-            if(start >= 0 && end >= 1) {
-                return new Org(0, result.substring(start, end), OrgType.CORPORATE.ordinal());
+            int start = result.indexOf("Organization:");
+            if (start < 0) return null;
+            int end = result.substring(start).indexOf('\n') + start;   // remove newline
+
+            if (end >= start + 1) {
+                String orgName = result.substring(start + "Organization:   ".length(), end);
+
+                int offset = result.indexOf("OrgName:");
+                String partialResult = result.substring(offset);
+                start = partialResult.indexOf("\nRef:            ");
+                end = partialResult.substring(start + 1).indexOf("\n") + start + 1;
+                if (start >= 0 && end >= start) {
+                    String refUrl = partialResult.substring(start + "\nRef:            ".length(), end);
+                    Org org = new Org(0, orgName, OrgType.CORPORATE.ordinal());
+                    return new FullOrg(org, refUrl);
+                }
             }
-            else return null;
+            return null;
         } catch (
                 IOException e) {
             System.err.println("Error I/O exception: " + e.getMessage());
