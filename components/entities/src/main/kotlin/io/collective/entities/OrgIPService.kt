@@ -14,6 +14,10 @@ class OrgIPService(private val dataGateway: OrgIPDataGateway) {
         return dataGateway.findAll().map { OrgIPRecord(it.id, it.startIP, it.endIP, it.orgId) }
     }
 
+    fun findAllByOrg(orgId: Long): List<OrgIPRecord> {
+        return dataGateway.findAllByOrg(orgId).map { OrgIPRecord(it.id, it.startIP, it.endIP, it.orgId) }
+    }
+
     fun findById(id: Long): Org {
         val record = dataGateway.findById(id)!!
         return Org(record.id, record.name, record.orgType)
