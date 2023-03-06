@@ -10,6 +10,9 @@ dependencies {
     implementation project(path: ':components:workflow-support')
     implementation project(path: ':components:entities')
     implementation project(path: ':components:database-support')
+    implementation project(path: ':components:endpoints')
+    implementation project(path: ':components:rest-support')
+    implementation project(path: ':components:database-support')
 }
 
 tasks.withType(Copy).configureEach {

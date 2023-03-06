@@ -2,11 +2,14 @@ package io.collective.start
 
 import freemarker.cache.ClassTemplateLoader
 import io.collective.database.devDataSource
+import io.collective.endpoints.EndpointTask
+import io.collective.endpoints.EndpointWorker
 import io.collective.entities.IPUtility
 import io.collective.entities.Org
 import io.collective.entities.OrgIPDataGateway
 import io.collective.entities.OrgIPService
 import io.collective.ip.IpToOrgWebAPIResolver
+import io.collective.restsupport.RestTemplate
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.freemarker.*
@@ -39,12 +42,25 @@ fun Application.module() {
                 )
             ) {
                 val orgIpService = OrgIPService(OrgIPDataGateway(devDataSource()))
+                // First check the database to see if this IP is mapped to an Org
                 var org = orgIpService.findByIp(ipAddress)
                 if (org == null) {
+                    // If not in the database, get the Org from the web API
                     org = IpToOrgWebAPIResolver().getOrg(ipAddress)
+                    // Check if the org is in the database, but just missing the update for this IP range
                     val newOrg: Org? = orgIpService.findByName(org.name)
-                    if(newOrg == null)
-                            orgIpService.createOrg(org.name, org.orgType)
+                    if(newOrg == null) {
+                        // Org is missing from database so create it
+                        val orgCreated = orgIpService.createOrg(org.name, org.orgType)
+
+                        val template = RestTemplate()
+                        val gateway = OrgIPDataGateway(devDataSource())
+
+
+                        val worker = EndpointWorker(template, gateway)
+                        // TODO parse the response to get the URL or IP range.
+                        worker.execute(EndpointTask("https://rdap.arin.net/registry/entity/CC-3517", orgCreated.id))
+                    } // TODO else, update the Org for this IP range.
                 }
                 call.respond(
                     FreeMarkerContent(

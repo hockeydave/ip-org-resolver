@@ -23,9 +23,6 @@ INSERT INTO org_type(name) values ('MOBILE_ISP');
 INSERT INTO org_type(name) values ('RESIDENTIAL_ISP');
 INSERT INTO org_type(name) values ('CLOUD');
 INSERT INTO org_type(name) values ('CORPORATE');
-INSERT INTO org(name, org_type_id) values ('Charter Communications Inc', 1);
-INSERT INTO org(name, org_type_id) values ('Verizon Business (MCICS)', 1);
-INSERT INTO org(name, org_type_id) values ('T-Mobile USA, Inc. (TMOBI)', 1);
 
 
 
