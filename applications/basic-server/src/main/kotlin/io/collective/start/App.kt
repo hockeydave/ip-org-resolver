@@ -1,15 +1,8 @@
 package io.collective.start
 
 import freemarker.cache.ClassTemplateLoader
-import io.collective.database.devDataSource
-import io.collective.endpoints.EndpointTask
-import io.collective.endpoints.EndpointWorker
 import io.collective.entities.IPUtility
-import io.collective.entities.Org
-import io.collective.entities.OrgIPDataGateway
-import io.collective.entities.OrgIPService
-import io.collective.ip.IpToOrgWebAPIResolver
-import io.collective.restsupport.RestTemplate
+import io.collective.ip.IpToOrgResolver
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.freemarker.*
@@ -37,31 +30,9 @@ fun Application.module() {
             val formParameters = call.receiveParameters()
             val ipAddress = formParameters["ip"].toString()
             val ipType = IPUtility.getIpAddressType(ipAddress)
-            if (ipType.equals(IPUtility.IPType.IPv4) || ipType.equals(
-                    IPUtility.IPType.IPv6
-                )
-            ) {
-                val orgIpService = OrgIPService(OrgIPDataGateway(devDataSource()))
-                // First check the database to see if this IP is mapped to an Org
-                var org = orgIpService.findByIp(ipAddress)
-                if (org == null) {
-                    // If not in the database, get the Org from the web API
-                    val fullOrg = IpToOrgWebAPIResolver().getOrg(ipAddress)
-                    // Check if the org is in the database, but just missing the update for this IP range
-                    val newOrg: Org? = orgIpService.findByName(fullOrg.org.name)
-                    org = fullOrg.org
-                    if(newOrg == null) {
-                        // Org is missing from database so create it
-                        val orgCreated = orgIpService.createOrg(fullOrg.org.name, fullOrg.org.orgType)
-
-                        val template = RestTemplate()
-                        val gateway = OrgIPDataGateway(devDataSource())
-
-
-                        val worker = EndpointWorker(template, gateway)
-                        worker.execute(EndpointTask(fullOrg.url, orgCreated.id))
-                    } // TODO else, update the Org for this IP range.
-                }
+            if (ipType.equals(IPUtility.IPType.IPv4) || ipType.equals(IPUtility.IPType.IPv6)) {
+                val ipToOrgResolver = IpToOrgResolver()
+                val org = ipToOrgResolver.getOrg(ipAddress)
                 call.respond(
                     FreeMarkerContent(
                         "response.ftl", mapOf(

@@ -1,6 +1,7 @@
-package io.collective.ip;
+package test.collective.ip;
 
 import io.collective.entities.FullOrg;
+import io.collective.ip.IpToOrgWebAPIResolver;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

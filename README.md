@@ -130,7 +130,7 @@ java -jar applications/data-analyzer-server/build/libs/data-analyzer-server-1.0-
 run:
 ./gradlew tests
 ### Unit Tests:
-1.  components/workflow-support/src/test/java/io.collective.ip.IpToOrgWebAPIResolverTest.java
+1.  components/endpoints/src/test/java/test.collective.ip.IpToOrgWebAPIResolverTest.java
 2. applications/basic-server/src/test/kotlin/test/collective/start/AppTest.kt
 
 ### Integration Test:

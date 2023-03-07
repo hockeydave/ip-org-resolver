@@ -1,7 +1,10 @@
 package test.collective.iporgs
 
 import io.collective.database.DatabaseTemplate
-import io.collective.entities.*
+import io.collective.entities.IPUtility
+import io.collective.entities.Org
+import io.collective.entities.OrgIPDataGateway
+import io.collective.entities.OrgType
 import io.collective.testsupport.testDataSource
 import org.junit.After
 import org.junit.Before
